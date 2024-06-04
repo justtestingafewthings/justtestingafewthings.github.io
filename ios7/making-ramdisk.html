@@ -14,10 +14,6 @@
     <p>Unfortunately no automated tool exists to make iOS 8 SSH ramdisks and we can't use an iOS 9-12 ramdisk because we need to also downgrade ASP</br>
 	<p>Keys for decryption of firmware components and proper component names can be found at <a href="https://theapplewiki.com/wiki/Firmware_Keys" class="link">The Apple Wiki</a></p>
     <h3>Creating ramdisk</h3>
-    <p>Download SSH binpack</p>
-    
-    <p class="cli">curl -O https://iarchive.app/Download/iram.tar</p>
-    
     <p>Unpack ramdisk to raw</p>
     
     <p class="cli">img4 -i xxx.xxxxx.xxx.dmg -o ramdisk.dmg -k ivkey</p>
