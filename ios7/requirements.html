@@ -1,0 +1,80 @@
+<html>
+    <link rel="stylesheet" href="general.css"></br>
+    <script src="script.js"></script>
+        <meta charset="Unicode">
+            <head>
+                <title>Dual Booting 64 Bit devices</title>
+            </head>
+<body onload="dark_save()">
+<div class="main">
+    
+    <button id="dark_button" class="btn" onclick="dark()">🌙</button>
+	
+	<h2>First Steps</h2>
+	
+	<p>Most tools are designed to be used on macOS, however if compiled from source they may be able to run on other operating systems.</p> 
+
+	<h4>Download and compile:</h4>
+
+	<p><a href="https://github.com/xerub/img4lib" class="link">img4lib</a> (img4) by @xerub</p> 
+
+	<p><a href="https://github.com/planetbeing/xpwn/tree/master/dmg" class="link">dmgtool from xpwn</a> by @planetbeing</p> 
+	
+	<p><a href="https://github.com/tihmstar/img4tool" class="link">img4tool</a> by @Tihmstar</p> 
+	
+	<p><a href="https://github.com/exploit3dguy/iPatcher" class="link">iPatcher</a> by @exploit3dguy</p>
+	
+	<p><a href="https://github.com/tihmstar/tsschecker" class="link">tsschecker</a> by @Tihmstar</p> 
+	
+	<p><a href="https://iarchive.app/Download/seprmvr64lite.zip" class="link">seprmvr64lite</a> by @mineekdev</p> 	
+	
+	<p><a href="https://github.com/libimobiledevice/libirecovery" class="link">irecovery</a> from Libimobiledevice</p>
+	
+	<p><a href="https://github.com/libimobiledevice/libusbmuxd" class="link">usbmuxd</a> from Libimobiledevice</p>
+
+	<p><a href="https://github.com/verygenericname/kerneldiff_C" class="link">kerneldiff</a> by @dedbeddedbed</p>
+	
+	<h4>Download (precompiled):</h4>	
+
+	<p><a href="https://github.com/dora2-iOS/iPwnder32/releases/tag/3.2" class="link">iPwnder32</a> by @dora2ios</p>
+    
+    <p><a href="https://formulae.brew.sh/formula/gnu-tar" class="link">gnu-tar</a> from homebrew</p>
+
+	<p>NOTE: iPwnder32 does not work on Apple Silicon on macOS 11.3 or higher. I have yet to find a pwndfu tool that will work on these macOS versions.</p>
+
+	<p>You may also want an SFTP client. I recommend <a href="https://cyberduck.io" class="link">Cyberduck</a></p>
+	
+	<h4>Other:</h4>	
+
+	<p>Jailbroken A7 device on latest iOS with openssh installed (any compatible jailbreak should work)</p>
+	
+	<p>The target firmware (iOS 7.x) which can be found <a href="https://ipsw.me/" class="link">here</a></p>
+
+	<p>You will also need to download an iOS 8.0 IPSW to make an SSH ramdisk</p>
+
+	<p>NOTE: Due to Apple messing up their servers, you may need to download the IPSW using http. To do this, remove "secure" from the URL and replace "https" with "http"</p>
+	
+	<h4>SHSH(2) (apticket) files:</h4>
+	
+	<p>SHSH signatures are required in order to properly build img4 files that the BootROM will accept from pwned DFU mode. Unless you have them already, you can save them with tsschecker (or other public tools.)
+	<p>NOTE: SHSH version does not have to match target iOS version.</p>
+	<p class="cli">tsschecker -d iPhoneX,X -l -e ECID -B boardconfig -l -s</p>
+	
+	<p>If you do not know your ECID or boardconfig, connect the device in recovery mode and execute:</p>
+	
+	<p class="cli">irecovery -q</p>
+	
+	<p>which will give output similar to this: 
+	<p> </p>
+	
+	</br><img class="align" src="images/recovery.png"></br>
+
+	
+	<p>Next, convert your saved shsh2 file for your device to raw IM4M with img4tool. This file will be critical for signing components later on:</p>
+	
+	<p class="cli">img4tool -e -s *.shsh2 -m IM4M</p>
+    <center>Next part → <a href="preparations.html" class="link"></b>Preparations</a></center></br>
+    <center><a href="index.html" class="link"></b>iOS 7 Tethered Downgrade</a></center></br>
+</div>
+</body>
+</html>

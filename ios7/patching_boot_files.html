@@ -1,0 +1,67 @@
+<html>
+    <link rel="stylesheet" href="general.css"></br>
+    <script src="script.js"></script>
+        <meta charset="Unicode">
+            <head>
+                <title>Dual Booting 64 Bit devices</title>
+            </head>
+<body onload="dark_save()">
+<div class="main">
+    
+    <button id="dark_button" class="btn" onclick="dark()">🌙</button>
+    
+    <h2>Patching boot files</h2>
+    <p>Keys for decryption of firmware components and proper component names can be found at <a href="https://theapplewiki.com/wiki/Firmware_Keys" class="link">The Apple Wiki</a></p>
+    <h3>iBSS and iBEC</h3>
+    <p>Decryption</p>
+
+    <p class="cli">img4 -i iBSS.boardconfig.RELEASE.im4p -o iBSS.dec -k ivkey</p>
+    <p class="cli">img4 -i iBEC.boardconfig.RELEASE.im4p -o iBEC.dec -k ivkey</p>
+
+    <p>Patch signature checks using iPatcher</p>
+
+    <p class="cli">ipatcher iBSS.dec iBSS.patched</p>
+
+    <p class="cli">ipatcher iBEC.dec iBEC.patched -b "-v rd=disk0s1s1 amfi=0xff cs_enforcement_disable=1 keepsyms=1 debug=0x2014e wdt=-1"</p>
+
+    <p>Pack into img4</p>
+
+    <p class="cli">img4 -i iBSS.patched -o iBSS.img4 -M IM4M -A -T ibss</p>
+
+    <p class="cli">img4 -i iBEC.patched -o iBEC.img4 -M IM4M -A -T ibec</p>
+    
+    <h3>Kernelcache</h3>
+    
+    <p>Decryption</p>
+    
+    <p class="cli">img4 -i kernelcache.release.boardconfig -o kcache.raw -k ivkey</p>
+    
+    <p class="cli">img4 -i kernelcache.release.boardconfig -o kernelcache.im4p -k ivkey -D</p>
+    
+    <p>Patch SEP functionality using seprmvr64lite</p>
+    
+    <p class="cli">seprmvr64lite kcache.raw kcache.patched</p>
+    
+    <p class="cli">kerneldiff kcache.raw kcache.patched kc.bpatch</p>
+    
+    <p>Pack into img4</p>
+    
+    <p class="cli">img4 -i kernelcache.im4p -o kernelcache.img4 -M IM4M -T rkrn -P kc.bpatch</p>
+    
+    <h3>DeviceTree</h3>
+    
+    <p>Decryption</p>
+    
+    <p class="cli">img4 -i devicetree.boardconfig.im4p -o dtree.raw -k ivkey</p>
+    
+    <p>Pack into img4</p>
+    
+    <p class="cli">img4 -i dtree.raw -o devicetree.img4 -A -M IM4M -T rdtr</p>
+    
+    <b>Done! Now we are ready for tether boot</b>
+
+<center>Next part → <a href="tether-boot.html" class="link"></b>Tether boot</a></center></br>
+    <center><a href="index.html" class="link"></b>iOS 7 Tethered Downgrade</a></center></br>
+</div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<html>
+    <link rel="stylesheet" href="general.css"></br>
+    <script src="script.js"></script>
+        <meta charset="Unicode">
+            <head>
+                <title>iOS 7 Tethered Downgrade</title>
+            </head>
+<body onload="dark_save()">
+<div class="main">
+    
+    <button id="dark_button" class="btn" onclick="dark()">🌙</button>
+    
+    <h2>Preparations</h2>
+    <p>We will need to do two things to prepare. We will back up some files needed to boot iOS 7 and create a tar containing the contents of the filesystem image.</br>
+    <p>We will start by decrypting the filesystem image</p>
+    <p>Keys for decryption of firmware components and proper component names can be found at <a href="https://theapplewiki.com/wiki/Firmware_Keys" class="link">The Apple Wiki</a></p>
+    <p>The root filesystem image is the largest dmg file inside the IPSW</p>
+    
+    <p class="cli">dmg extract encrypted.dmg rw.dmg -k key</p>
+    
+    <p>We will now need to convert the image to UDZO format</p>
+    
+    <p class="cli">dmg build rw.dmg ios7.dmg</p>
+    
+    <p>You will now have a read-only decrypted filesystem image</p>
+    
+    <p class="cli">hdiutil attach ios7.dmg</p>
+    
+    <p>Take note of the mount point, highlighted in the example below</p>
+    
+    </br><img class="align" src="images/mountpoint.png"></br>
+        
+    <p>We need to enable ownership for the tar to have correct ownership</p>
+        
+    <p class="cli">sudo diskutil enableOwnership mountpoint</p>
+    
+    <p>Now you can create the tar</p>
+    
+    <p class="cli">sudo gtar -cvf ios7.tar -C mountpoint .</p></p>
+    
+    <p>Now you will need to connect to the device to backup some files. Start off by creating an iproxy tunnel: </p>
+    <p class="cli">iproxy 2222 22</p>
+    <p>You should see "waiting for connection". Let this run in the background and open a new terminal window to transfer files</p>
+    <p>These are the files you will need to backup to your computer for booting:</p>
+    <p>Password should be "alpine"</p>
+    
+    <p class="cli">scp -P 2222 root@localhost:/System/Library/Caches/apticket.der ./apticket.der</p></p>
+    
+    <p class="cli">scp -P 2222 root@localhost:/usr/standalone/firmware/sep-firmware.img4 ./sep-firmware.img4</p></p>
+    
+    <p class="cli">scp -r -P 2222 root@localhost:/usr/local/standalone/firmware/Baseband ./Baseband</p></p>
+    
+    <p class="cli">scp -r -P 2222 root@localhost:/var/keybags ./keybags</p></p>
+    
+	<center>Next part → <a href="making-ramdisk.html" class="link"></b>Making SSH ramdisk</a></center></br>
+	<center><a href="index.html" class="link"></b>iOS 7 Tethered Downgrade</a></center></br>
+</div>
+</body>
+</html>

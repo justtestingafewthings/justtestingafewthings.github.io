@@ -1,0 +1,44 @@
+<html>
+    <link rel="stylesheet" href="general.css"></br>
+    <script src="script.js"></script>
+        <meta charset="Unicode">
+            <head>
+                <title>Dual Booting 64 Bit devices</title>
+            </head>
+<body onload="dark_save()">
+<div class="main">
+    
+    <button id="dark_button" class="btn" onclick="dark()">🌙</button>
+    
+<h2>Ramdisk boot</h2>
+
+
+	</br>It's time to boot the ramdisk to install the new filesystem:</br>
+	<p>Put the device in DFU mode</p>
+    <p class="cli">iPwnder32 -p</p>
+	<p>Send iBSS (twice) and iBEC</p>
+    
+	<p class="cli">irecovery -f iBSS.img4</p>
+    <p class="cli">irecovery -f iBSS.img4</p>
+	<p class="cli">irecovery -f iBEC.img4</p>
+	
+    <p>Send and load ramdisk</p>
+	<p class="cli">irecovery -f ramdisk.img4</p>
+	<p class="cli">irecovery -c ramdisk</p>
+
+    <p>Send and load DeviceTree</p>
+	<p class="cli">irecovery -f devicetree.img4</p>
+	<p class="cli">irecovery -c devicetree</p>
+
+    <p>Send Kernelcache and bootx</p>
+	<p class="cli">irecovery -f kernelcache.img4</p>
+	<p class="cli">irecovery -c bootx</p>
+
+	<p>If you did everything correctly you should see verbose on screen and a large ASCII "OK"</br>
+	
+    </br><img class="limit" src="images/sshramdisk.jpg"></br></br>
+	<center>Next part → <a href="installing-filesystem.html" class="link"></b>Installing filesystem</a></center></br>
+    <center><a href="index.html" class="link"></b>iOS 7 Tethered Downgrade</a></center></br>
+</div>
+</body>
+</html>

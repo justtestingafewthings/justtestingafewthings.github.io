@@ -1,0 +1,122 @@
+<html>
+    <link rel="stylesheet" href="general.css"></br>
+    <script src="script.js"></script>
+        <meta charset="Unicode">
+            <head>
+                <title>iOS 7 Tethered Downgrade</title>
+            </head>
+<body onload="dark_save()">
+<div class="main">
+    
+    <button id="dark_button" class="btn" onclick="dark()">🌙</button>
+    
+<h2>Installing filesystem</h2>
+
+<p>Create an iproxy tunnel using port 44 instead of 22</p>
+
+<p class="cli">iproxy 2222 44</p>
+
+<p>In a new terminal window, run the following command to connect to device:</p>
+
+<p class="cli">ssh -l root -p 2222 127.0.0.1</p>
+
+<p>Password is "alpine"</p>
+
+<p>NOTE: If you have waited a long time and it still has not connected, press CTRL+C and try to connect again</p>
+
+<p>Clear partitions and create new LwVM partition table</p>
+
+<p class="cli">lwvm init</p>
+
+<p>Reboot</p>
+
+<p class="cli">reboot</p>
+
+<b>You now need to <a href="ramdisk-boot.html" class="link">boot ramdisk again</a></b>
+
+<p>Now we need to create new partitions</p>
+
+<p class="cli">gptfdisk /dev/rdisk0s1</p>
+
+<p>You should see this:</p>
+
+</br><img class="align" src="images/gptfdisk.png"></br>
+
+<p>You can then press buttons in this order:</p>
+
+<p class="cli">n &lt;enter&gt; 1 &lt;enter&gt; &lt;enter&gt; 786438 &lt;enter&gt; &lt;enter&gt;</p>
+
+<p>If you pressed the buttons correctly, this is what you should see:</p>
+
+</br><img class="align" src="images/partition1.png"></br>
+
+<p>Now create the data partition</p>
+
+<p class="cli">n &lt;enter&gt; 2 &lt;enter&gt; &lt;enter&gt; &lt;enter&gt; &lt;enter&gt;</p>
+
+</br><img class="align" src="images/partition2.png"></br>
+
+<p>Save changes</p>
+
+<p class="cli">w &lt;enter&gt; y &lt;enter&gt;</p>
+
+</br><img class="align" src="images/savechanges.png"></br>
+    
+<p>Now execute sync a few times</p>
+
+<p class="cli">sync</p>
+
+</br><img class="align" src="images/sync.png"></br>
+<p> </p>
+<b>IMPORTANT: If for some reason newfs_hfs can't find the new partitions, you may need to reboot and <a href="ramdisk-boot.html" class="link">boot ramdisk again</a></b>
+<p>Format partitions</p>
+<p class="cli">/sbin/newfs_hfs -s -v System -J -b 4096 -n a=4096,c=4096,e=4096 /dev/disk0s1s1</p>
+<p class="cli">/sbin/newfs_hfs -s -v Data -J -b 4096 -n a=4096,c=4096,e=4096 /dev/disk0s1s2</p>
+
+<p>Mount partitions</p>
+<p class="cli">mount_hfs /dev/disk0s1s1 /mnt1</p>
+<p class="cli">mount_hfs /dev/disk0s1s2 /mnt2</p>
+
+<p>Send filesystem tar to device</p>
+
+<p class="cli">scp -P 2222 ios7.tar root@localhost:/mnt2</p>
+
+<p>Extract filesystem</p>
+<p class="cli">tar -xvf /mnt2/ios7.tar -C /mnt1</p>
+
+<p>Move /var to disk0s1s2</p>
+
+<p class="cli">mv -v /mnt1/private/var/* /mnt2</p>
+
+<p>Create folders needed for booting</p>
+
+<p class="cli">mkdir -p /mnt1/usr/local/standalone/firmware</p>
+
+<p>Add files required for booting</p>
+
+<p class="cli">scp -r -P 2222 ./keybags root@localhost:/mnt2</p>
+<p class="cli">scp -r -P 2222 ./Baseband root@localhost:/mnt1/usr/local/standalone/firmware</p>
+<p class="cli">scp -P 2222 ./apticket.der root@localhost:/mnt1/System/Library/Caches/</p>
+<p class="cli">scp -P 2222 ./sep-firmware.img4 root@localhost:/mnt1/usr/standalone/firmware/</p>
+
+<p>Since nano is unavailable on the ramdisk, you must copy fstab to your computer and edit it there before transferring it back</p>
+
+<p class="cli">scp -P 2222 root@localhost:/mnt1/etc/fstab ./fstab</p>
+
+<p>Open fstab in your preferred text editor and change it so it looks like this:</p>
+
+</br><img class="align" src="images/fstab.png"></br>
+    
+<p>Save this file and transfer it back to your device</p>
+
+<p class="cli">scp -P 2222 fstab root@localhost:/mnt1/etc/</p>
+
+<p>Now you can reboot!</p>
+
+<p class="cli">reboot</p>
+	
+    <center>Next part → <a href="patching_boot_files.html" class="link"></b>Patching boot files</a></center></br>
+	<center><a href="index.html" class="link"></b>iOS 7 Tethered Downgrade</a></center></br>
+</div>
+</body>
+</html>
